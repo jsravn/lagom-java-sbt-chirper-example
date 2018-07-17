@@ -49,13 +49,18 @@ lazy val chirpApi = project("chirp-api")
   )
 
 lazy val chirpImpl = project("chirp-impl")
-  .enablePlugins(LagomJava, SbtReactiveAppPlugin)
+  .enablePlugins(LagomJava, SbtReactiveAppPlugin, Cinnamon)
   .settings(
     libraryDependencies ++= Seq(
       lagomJavadslPersistenceCassandra,
       lagomJavadslPubSub,
-      lagomJavadslTestKit
-    )
+      lagomJavadslTestKit,
+      Cinnamon.library.cinnamonCHMetrics,
+      Cinnamon.library.cinnamonAkka,
+      Cinnamon.library.cinnamonPrometheus,
+      Cinnamon.library.cinnamonPrometheusHttpServer
+    ),
+    annotations := Map("prometheus.io/scrape" -> "true")
   )
   .settings(lagomForkedTestSettings: _*)
   .settings(dockerSettings: _*)
